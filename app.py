@@ -6,24 +6,54 @@ from io import BytesIO
 import re
 
 # ==============================
-# 🎨 Estilos básicos
+# 🎨 Selector de tema visual
 # ==============================
 modo_color = st.sidebar.radio("🎨 Tema visual", ["Claro", "Oscuro"])
+
 if modo_color == "Oscuro":
     st.markdown("""
         <style>
-        body { background-color: #0e1117; color: white; }
-        .stMarkdown, .stText, .stSubheader { color: white !important; }
+        .stApp {
+            background-color: #0e1117;
+            color: white;
+        }
+        .stMarkdown, .stTextInput, .stTextArea, .stSubheader, .stSelectbox, .stRadio, .stCheckbox {
+            color: white !important;
+        }
+        div[data-testid="stMarkdownContainer"] p, h1, h2, h3, h4, h5, h6 {
+            color: white !important;
+        }
+        .stTextInput > div > div > input, .stTextArea textarea {
+            background-color: #262730;
+            color: white;
+            border: 1px solid #40414f;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+        <style>
+        .stApp {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .stTextInput > div > div > input, .stTextArea textarea {
+            background-color: #f5f5f5;
+            color: black;
+            border: 1px solid #cccccc;
+        }
         </style>
     """, unsafe_allow_html=True)
 
+# ==============================
+# 🧠 Encabezado
+# ==============================
 st.title("🧠 Análisis de texto inteligente")
 st.write("Analiza sentimientos, subjetividad y traducción de tus textos con una interfaz sencilla.")
 
 # ==============================
-# 📘 Funciones principales
+# 📘 Funciones
 # ==============================
-
 def contar_palabras(texto):
     stop_words = set(["de", "la", "y", "el", "en", "que", "a", "los", "se", "del", "por", "las", "un", "una", "con", "no", "es", "para", "su", "al"])
     palabras = re.findall(r'\b\w+\b', texto.lower())
@@ -72,9 +102,7 @@ if st.button("🔍 Analizar texto"):
 
         st.bar_chart(dict(list(contador.items())[:10]))
 
-        # ==============================
-        # 🔊 Interacción adicional: voz
-        # ==============================
+        # 🔊 Interacción de voz
         if st.checkbox("🔊 Escuchar resultado"):
             mensaje = (
                 "El sentimiento del texto es positivo."
@@ -91,14 +119,16 @@ if st.button("🔍 Analizar texto"):
         st.warning("Por favor, ingresa algún texto para analizar.")
 
 # ==============================
-# 📘 Información adicional
+# ℹ️ Información
 # ==============================
-with st.expander("ℹ️ Información"):
+with st.expander("📘 Información sobre el análisis"):
     st.markdown("""
-    Esta aplicación analiza texto usando:
-    - **TextBlob** para análisis de sentimientos
-    - **Deep Translator** para traducción automática
-    - **gTTS** para síntesis de voz (interacción opcional)
+    - **Sentimiento**: de -1 (muy negativo) a 1 (muy positivo).  
+    - **Subjetividad**: de 0 (muy objetivo) a 1 (muy subjetivo).  
+    - **Librerías usadas:**  
+      - TextBlob 🧠  
+      - Deep Translator 🌍  
+      - gTTS 🔊  
     """)
 
 st.markdown("---")
